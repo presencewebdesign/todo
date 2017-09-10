@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
-import TodoList from './TodoList';
-import uuid from 'node-uuid';
 import validator from 'validator';
+import uuid from 'node-uuid';
+
+import TodoList from './TodoList';
 import Input from './form/Input';
 import Check from './form/Check';
+import TodoApi from './api/TodoApi';
 
 class TodoApp extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isChecked: false,
             values: {
                 addtodo: '',
                 searchText: '',
+                isComplete: false,
             },
             errors: {
                 addtodo: false,
@@ -22,24 +24,16 @@ class TodoApp extends Component {
                 addtodo: 'Please enter a value',
                 searchText: 'Please enter a value',
             },
-            todos: [
-                {
-                    id: uuid(),
-                    text: 'Feed the cat',
-                }, {
-                    id: uuid(),
-                    text: 'Clean the dishes',
-                },
-                {
-                    id: uuid(),
-                    text: 'Make dinner',
-                },
-            ],
+            todos: TodoApi.getTodos(),
         };
         this.control = this.control.bind(this);
         this.validate = this.validate.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
+        this.handleToggle = this.handleToggle.bind(this);
+    }
+    ComponentDidUpdate() {
+        TodoApi.setTodos(this.state.todos);
     }
     control(e) {
         const value = e.target.value;
@@ -74,65 +68,93 @@ class TodoApp extends Component {
         default: break;
         }
     }
+    handleToggle(id) {
+        const updateTodos = this.state.todos.map((todo) => {
+            if (todo.id === id) {
+                todo.completed = !todo.completed;
+            }
+            return todo;
+        });
+        this.setState({ todos: updateTodos });
+    }
     handleSubmit(e) {
         e.preventDefault();
         const todoText = this.state.values.addtodo;
         if (todoText.length > 0 && this.state.errors.addtodo === false) {
-            console.log(`value:${todoText}`);
             this.setState({
                 todos: [
                     ...this.state.todos,
                     {
                         id: uuid(),
                         text: todoText,
+                        completed: false,
                     },
                 ],
             });
         }
     }
     handleSearch(e) {
-        this.setState({
-            isChecked: !this.state.isChecked,
-        });
-        const searchText = this.state.values.searchText;
-        const showCompleted = this.state.isChecked;
-        this.props.onSearch(showCompleted, searchText);
+        const value = e.target.value;
+        const name = e.target.name;
+        switch (name) {
+        case 'searchText':
+            this.setState({
+                values: {
+                    ...this.state.values, // this takes all thats inside of this.state.values and puts it here - below you add the new data.
+                    [name]: value, // use [] to use a dynamic (variable) key
+                },
+            });
+            break;
+        case 'isComplete':
+            this.setState({
+                values: {
+                    ...this.state.values, // this takes all thats inside of this.state.values and puts it here - below you add the new data.
+                    [name]: value, // use [] to use a dynamic (variable) key
+                    isComplete: !this.state.values.isComplete,
+                },
+            });
+            break;
+        default: break;
+        }
+        // const searchText = this.state.values.searchText.toLowerCase();
+        // const isComplete = this.state.values.isComplete;
     }
     render() {
         const { todos } = this.state;
         return (
             <div>
-                {<pre>
-                  {JSON.stringify(this.state, null, 4)}
-                </pre>}
+            {<pre>
+                {JSON.stringify(this.state, null, 4)}
+              </pre>}
                 <Input
                     name="searchText"
                     type="text"
                     state={this.state}
+                    handleSearch={this.handleSearch}
+                    validate={this.validate}
+                    placeholder="Search Todos..."
+                />
+                <Check
+                    name="isComplete"
+                    type="checkbox"
+                    label="Show Completed"
+                    state={this.state}
+                    handleSearch={this.handleSearch}
+                    checked={this.state.values.isComplete}
+                />
+                <TodoList todos={todos} onToggle={this.handleToggle} />
+                <form onSubmit={this.handleSubmit}>
+                <Input
+                    name="addtodo"
+                    type="text"
+                    state={this.state}
                     control={this.control}
                     validate={this.validate}
-                    onChange={this.handleSearch}
+                    placeholder="Add Todos"
                 />
-                <label>
-                    <Check
-                        type="checkbox"
-                        checked={this.isChecked}
-                        onChange={this.handleSearch}
-                    />
-                    Show completed todos
-                </label>
-                <TodoList todos={todos} />
-                <form onSubmit={this.handleSubmit}>
-                    <Input
-                        name="addtodo"
-                        type="text"
-                        state={this.state}
-                        control={this.control}
-                        validate={this.validate}
-                    />
-                    <button type="submit">Add Todo</button>
-                </form>
-            </div>
+                <button type="submit">Add Todo</button>
+              </form>
+          </div>
         );
     }
 }

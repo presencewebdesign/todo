@@ -1,13 +1,15 @@
 import React from 'react';
-import { shape, objectOf, bool } from 'prop-types';
+import { string } from 'prop-types';
 
 const Check = props => (
     <div>
         <label htmlFor={props.name}>
             <input
+                name={props.name}
                 type={props.type}
-                checked={this.isChecked}
-                onChange={this.control}
+                value={props.state.values[props.name]}
+                onChange={props.handleSearch}
+                checked={props.state.values.isComplete}
             />
             {props.label ? props.label : props.name}
         </label>
@@ -15,10 +17,8 @@ const Check = props => (
 );
 
 Check.propTypes = {
-    type: bool.isRequired,
-    state: shape({
-        values: objectOf(bool),
-    }).isRequired,
+    name: string.isRequired,
+    type: string.isRequired,
 };
 
 export default Check;

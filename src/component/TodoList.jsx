@@ -4,7 +4,11 @@ import Todo from './Todo';
 const TodoList = (props) => {
     const { todos } = props;
     const renderTodos = () => todos.map(todo => (
-        <Todo key={todo.id} {...todo} />
+        <Todo
+            key={todo.id}
+            {...todo}
+            onToggle={props.onToggle}
+        />
     ));
     return (
         <div>
