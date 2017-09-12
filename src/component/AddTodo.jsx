@@ -15,6 +15,7 @@ class AddTodo extends Component {
                         state={this.state}
                         control={this.control}
                         validate={this.validate}
+                        placeholder="Add Todos"
                     />
                     <button type="submit">Add Todo</button>
                 </form>

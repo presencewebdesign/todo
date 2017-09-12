@@ -32,7 +32,7 @@ class TodoApp extends Component {
         this.handleSearch = this.handleSearch.bind(this);
         this.handleToggle = this.handleToggle.bind(this);
     }
-    ComponentDidUpdate() {
+    componentDidUpdate() {
         TodoApi.setTodos(this.state.todos);
     }
     control(e) {
@@ -120,7 +120,7 @@ class TodoApp extends Component {
         // const isComplete = this.state.values.isComplete;
     }
     render() {
-        const { todos } = this.state;
+        const filteredTodos = TodoApi.filterTodos(this.state.todos, this.state.values.isComplete, this.state.values.searchText);
         return (
             <div>
             {<pre>
@@ -142,7 +142,7 @@ class TodoApp extends Component {
                     handleSearch={this.handleSearch}
                     checked={this.state.values.isComplete}
                 />
-                <TodoList todos={todos} onToggle={this.handleToggle} />
+                <TodoList todos={filteredTodos} onToggle={this.handleToggle} />
                 <form onSubmit={this.handleSubmit}>
                 <Input
                     name="addtodo"
@@ -154,6 +154,19 @@ class TodoApp extends Component {
                 />
                 <button type="submit">Add Todo</button>
               </form>
+
+            {/*
+            <TodoSearch
+                onSearch={this.handleSearch}
+            />
+            <TodoList
+                todos={filteredTodos}
+                onToggle={this.handleToggle}
+            />
+            <AddTodo
+                onAddTodo={this.handleAddTodo}
+            /> */}
+
           </div>
         );
     }

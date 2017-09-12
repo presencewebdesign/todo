@@ -1,29 +1,27 @@
 import React, { Component } from 'react';
 import Input from './form/Input';
+import Check from './form/Check';
 
 class TodoSearch extends Component {
     render() {
         return (
             <div>
-                {<pre>
-                    {JSON.stringify(this.state, null, 4)}
-                </pre>}
                 <Input
                     name="searchText"
                     type="text"
                     state={this.state}
-                    control={this.control}
+                    handleSearch={this.handleSearch}
                     validate={this.validate}
-                    onChange={this.handleSearch}
+                    placeholder="Search Todos..."
                 />
-                <label>
-                    <input
-                        type="checkbox"
-                        checked={this.isChecked}
-                        onChange={this.handleSearch}
-                    />
-                    Show completed todos
-                </label>
+                <Check
+                    name="isComplete"
+                    type="checkbox"
+                    label="Show Completed"
+                    state={this.state}
+                    handleSearch={this.handleSearch}
+                    checked={this.isComplete}
+                />
             </div>
         );
     }

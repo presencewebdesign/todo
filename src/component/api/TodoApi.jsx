@@ -2,7 +2,6 @@ import $ from 'jquery';
 
 const TodoApi = {
     setTodos (todos) {
-        alert('hello');
         if ($.isArray(todos)) {
             localStorage.setItem('todos', JSON.stringify(todos));
             return todos;
@@ -16,6 +15,19 @@ const TodoApi = {
         } catch (e) {}
         // Final check data is valid
         return $.isArray(todos) ? todos : [];
+    },
+    filterTodos(todos, isComplete, searchText) {
+        var filteredTodos = todos;
+        // Filter by isCompleted
+        filteredTodos = filteredTodos.filter((todo) => {
+            return !todo.completed || isComplete;
+        });
+
+        // Filter by searchText
+
+        // sort todos with non-completed first
+
+        return filteredTodos;
     },
 };
 export default TodoApi;
