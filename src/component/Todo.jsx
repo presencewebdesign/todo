@@ -23,8 +23,6 @@ const Todo = (props) => {
             {props.text}
             <p className='date'>{renderDate()}</p>
         </label>
-
-
     );
 };
 

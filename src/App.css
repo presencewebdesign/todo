@@ -2,8 +2,11 @@ body{
     margin: 20px;
 }
 .todoList{
-    border-bottom: solid 1px #CCC;
+    border: solid 1px #CCC;
     display: block;
+    background: #eee;
+    padding: 10px;
+    margin-bottom: 10px;
 }
 p{
     padding:0;
@@ -25,3 +28,5 @@ input[type=checkbox]:checked + label {
     text-decoration: line-through;
     font-style: italic;
 }
+
+
