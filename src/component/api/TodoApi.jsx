@@ -17,7 +17,7 @@ const TodoApi = {
         return $.isArray(todos) ? todos : [];
     },
     filterTodos(todos, isComplete, searchText) {
-        var filteredTodos = todos;
+        let filteredTodos = todos;
         // Filter by isCompleted
         filteredTodos = filteredTodos.filter((todo) => {
             return !todo.completed || isComplete;

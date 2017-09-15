@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import validator from 'validator';
 import uuid from 'node-uuid';
+import moment from 'moment';
 
+import { Button, Row, Column } from 'react-foundation';
 import TodoList from './TodoList';
 import Input from './form/Input';
 import Check from './form/Check';
@@ -53,7 +55,7 @@ class TodoApp extends Component {
             this.setState({
                 errors: {
                     ...this.state.errors, // this takes all thats inside of this.state.values and puts it here - below you add the new data.
-                    [name]: !validator.isAlpha(this.state.values.addtodo), // use [] to use a dynamic (variable) key
+                    [name]: validator.isEmpty(this.state.values.addtodo), // use [] to use a dynamic (variable) key
                 },
             });
             break;
@@ -61,7 +63,7 @@ class TodoApp extends Component {
             this.setState({
                 errors: {
                     ...this.state.errors, // this takes all thats inside of this.state.values and puts it here - below you add the new data.
-                    [name]: !validator.isAlpha(this.state.values.searchText), // use [] to use a dynamic (variable) key
+                    [name]: validator.isEmpty(this.state.values.searchText), // use [] to use a dynamic (variable) key
                 },
             });
             break;
@@ -72,6 +74,7 @@ class TodoApp extends Component {
         const updateTodos = this.state.todos.map((todo) => {
             if (todo.id === id) {
                 todo.completed = !todo.completed;
+                todo.completedAt = !todo.completed;
             }
             return todo;
         });
@@ -88,6 +91,8 @@ class TodoApp extends Component {
                         id: uuid(),
                         text: todoText,
                         completed: false,
+                        createdAt: moment().unix(),
+                        completedAt: undefined,
                     },
                 ],
             });
@@ -120,40 +125,55 @@ class TodoApp extends Component {
         // const isComplete = this.state.values.isComplete;
     }
     render() {
-        const filteredTodos = TodoApi.filterTodos(this.state.todos, this.state.values.isComplete, this.state.values.searchText);
+
+        let todos = this.state.todos;
+        let isComplete = this.state.values.isComplete;
+        let searchText = this.state.values.searchText;
+
+        const filteredTodos = TodoApi.filterTodos(todos, isComplete, searchText);
         return (
             <div>
-            {<pre>
+            {/* {<pre>
                 {JSON.stringify(this.state, null, 4)}
-              </pre>}
-                <Input
-                    name="searchText"
-                    type="text"
-                    state={this.state}
-                    handleSearch={this.handleSearch}
-                    validate={this.validate}
-                    placeholder="Search Todos..."
-                />
-                <Check
-                    name="isComplete"
-                    type="checkbox"
-                    label="Show Completed"
-                    state={this.state}
-                    handleSearch={this.handleSearch}
-                    checked={this.state.values.isComplete}
-                />
-                <TodoList todos={filteredTodos} onToggle={this.handleToggle} />
-                <form onSubmit={this.handleSubmit}>
-                <Input
-                    name="addtodo"
-                    type="text"
-                    state={this.state}
-                    control={this.control}
-                    validate={this.validate}
-                    placeholder="Add Todos"
-                />
-                <button type="submit">Add Todo</button>
-              </form>
+              </pre>} */}
+
+                <div className="grid-center-example">
+                    <div className="container">
+                        <h1 className="page-title">Todo App</h1>
+                        <Row className="display">
+                            <Column small={11} medium={6} large={5}>
+                                <Input
+                                    name="searchText"
+                                    type="text"
+                                    state={this.state}
+                                    handleSearch={this.handleSearch}
+                                    validate={this.validate}
+                                    placeholder="Search Todos..."
+                                />
+                                <Check
+                                    name="isComplete"
+                                    type="checkbox"
+                                    label="Show Completed"
+                                    state={this.state}
+                                    handleSearch={this.handleSearch}
+                                    checked={this.state.values.isComplete}
+                                />
+                                <TodoList todos={filteredTodos} onToggle={this.handleToggle} />
+                                <form onSubmit={this.handleSubmit}>
+                                    <Input
+                                        name="addtodo"
+                                        type="text"
+                                        state={this.state}
+                                        control={this.control}
+                                        validate={this.validate}
+                                        placeholder="Add Todos"
+                                    />
+                                    <Button type="submit">Add Todo</Button>
+                                </form>
+                            </Column>
+                        </Row>
+                    </div>
+                </div>
 
             {/*
             <TodoSearch

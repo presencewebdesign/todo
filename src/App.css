@@ -1,3 +1,27 @@
 body{
-  padding: 20px;
+    margin: 20px;
+}
+.todoList{
+    border-bottom: solid 1px #CCC;
+    display: block;
+}
+p{
+    padding:0;
+    margin-bottom:0;
+}
+p.date{
+    text-align: left;
+}
+.container{
+    max-width: 500px;
+    margin: 0px auto;
+}
+input[type=checkbox] + label {
+    color: #333;
+    font-style: normal;
+}
+input[type=checkbox]:checked + label {
+    color: #333;
+    text-decoration: line-through;
+    font-style: italic;
 }
